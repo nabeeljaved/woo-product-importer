@@ -32,6 +32,7 @@
         
         public function __construct() {
             add_action( 'init', array( 'WebPres_Woo_Product_Importer', 'translations' ), 1 );
+            register_activation_hook(__FILE__, array(__CLASS__, 'activation'));
             add_action('admin_menu', array('WebPres_Woo_Product_Importer', 'admin_menu'));
             add_action('wp_ajax_woo-product-importer-ajax', array('WebPres_Woo_Product_Importer', 'render_ajax_action'));
         }
@@ -41,7 +42,7 @@
         }
 
         public static function admin_menu() {
-            add_management_page( __( 'Woo Product Importer', 'woo-product-importer' ), __( 'Woo Product Importer', 'woo-product-importer' ), 'manage_options', 'woo-product-importer', array('WebPres_Woo_Product_Importer', 'render_admin_action'));
+            add_menu_page( __( 'Product Importer', 'woo-product-importer' ), __( 'Product Importer', 'woo-product-importer' ), 'vendor_bulk_import', 'woo-product-importer', array('WebPres_Woo_Product_Importer', 'render_admin_action'));
         }
         
         public static function render_admin_action() {
@@ -53,6 +54,20 @@
         public static function render_ajax_action() {
             require_once(plugin_dir_path(__FILE__)."woo-product-importer-ajax.php");
             die(); // this is required to return a proper result
+        }
+
+        public function activation() {
+            self::add_cap();
+        }
+
+        // Add the new capability to all roles having a certain built-in capability
+        private static function add_cap() {
+            $roles = get_editable_roles();
+            foreach ($GLOBALS['wp_roles']->role_objects as $key => $role) {
+                if (isset($roles[$key]) && $role->has_cap('delete_product')) {
+                    $role->add_cap('vendor_bulk_import');
+                }
+            }
         }
     }
     

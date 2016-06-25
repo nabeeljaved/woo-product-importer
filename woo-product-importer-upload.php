@@ -467,7 +467,7 @@
 
 <div class="woo_product_importer_wrapper wrap">
     <div id="icon-tools" class="icon32"><br /></div>
-    <h2><?php _e( 'Woo Product Importer &raquo; Upload', 'woo-product-importer' ); ?></h2>
+    <h2><?php _e( 'Product Importer &raquo; Upload', 'woo-product-importer' ); ?></h2>
 
     <form enctype="multipart/form-data" method="post" action="<?php echo get_admin_url().'tools.php?page=woo-product-importer&action=preview'; ?>">
         <table class="form-table">
